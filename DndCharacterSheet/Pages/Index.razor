@@ -1,0 +1,100 @@
+﻿@page "/"
+@using DndCharacterSheet.Data
+
+<h1>Dnd Character sheet for @character.Name |Level: @character.level</h1>
+<EditForm Model="@character">
+    <table width="15%">
+        <tr>
+            <th></th>
+            <th style="padding-right:15px;">Stat</th>
+            <th style="padding-right:15px;">Bonus</th>
+            <th style="padding-right:5px;">Modifier</th>
+            <th style="padding-right:100px;">Reset Value</th>
+        </tr>
+        <tr>
+            <th>STRENGTH</th>
+            <th>@character.currentStrength</th>
+            <th>@((character.currentStrength - 10) / 2)</th>
+            <th><InputNumber @onclick="changeStr" @bind-Value="@character.strengthMod" /></th>
+            <th><button @onclick="(()=>character.strengthMod = 0)">Reset Stats</button></th>
+        </tr>
+        <tr>
+            <th>DEXTERITY</th>
+            <th>@character.currentDexterity</th>
+            <th>@((character.currentDexterity - 10) / 2)</th>
+            <th><InputNumber @onclick="changeDex" @bind-Value="@character.dexterityMod" /></th>
+            <th><button @onclick="(()=>character.dexterityMod = 0)">Reset Stats</button></th>
+        </tr>
+        <tr>
+            <th>CONSTITUTION</th>
+            <th>@character.currentConstitution</th>
+            <th>@((character.currentConstitution - 10) / 2)</th>
+            <th><InputNumber @onclick="changeCon" @bind-Value="@character.constitutionMod" /></th>
+            <th><button @onclick="(()=>character.constitutionMod = 0)">Reset Stats</button></th>
+        </tr>
+        <tr>
+            <th>INTELLIGENCE</th>
+            <th>@character.currentIntelligence</th>
+            <th>@((character.currentIntelligence - 10) / 2)</th>
+            <th><InputNumber @onclick="changeInt" @bind-Value="@character.intelligenceMod" /></th>
+            <th><button @onclick="(()=>character.intelligenceMod = 0)">Reset Stats</button></th>
+        </tr>
+        <tr>
+            <th>WISDOM</th>
+            <th>@character.currentWisdom</th>
+            <th>@((character.currentWisdom - 10) / 2)</th>
+            <th><InputNumber @onclick="changeWis" @bind-Value="@character.wisdomMod" /></th>
+            <th><button @onclick="(()=>character.wisdomMod = 0)">Reset Stats</button></th>
+        </tr>
+        <tr>
+            <th>CHARISMA</th>
+            <th>@character.currentCharisma</th>
+            <th>@((character.currentCharisma - 10) / 2)</th>
+            <th><InputNumber @onclick="changeCha" @bind-Value="@character.charismaMod" /></th>
+            <th><button @onclick="(()=>character.charismaMod = 0)">Reset Stats</button></th>
+        </tr>
+    </table>
+    <button type="submit">Update Stats</button>
+</EditForm>
+<button @onclick="generateNew">Generate New Character</button>
+    @code {
+        [Parameter] public string characterName { get; set; }
+        public CharacterSheetModel character { get; set; }
+        private bool isLoaded { get; set; } = false;
+        private bool isValid { get; set; } = false;
+
+        protected override void OnInitialized()
+        {
+            Random random = new Random();
+            character = new CharacterSheetModel(random.Next(1, 20), 8);
+        }
+        private void generateNew()
+        {
+            Random random = new Random();
+            character = new CharacterSheetModel(random.Next(1, 20), 8);
+        }
+        public void changeStr()
+        {
+            character.currentStrength = character.baseStrength + character.strengthMod;
+        }
+        public void changeDex()
+        {
+                character.currentDexterity = character.baseDexterity + character.dexterityMod;
+        }
+        public void changeCon()
+        {
+                character.currentConstitution = character.baseConstitution + character.constitutionMod;
+        }
+        public void changeInt()
+        {
+                character.currentIntelligence = character.baseIntelligence + character.intelligenceMod;
+        }
+        public void changeWis()
+        {
+                character.currentWisdom = character.baseWisdom + character.wisdomMod;
+        }
+        public void changeCha()
+        {
+                character.currentCharisma = character.baseCharisma + character.charismaMod;
+        }
+    }
