@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
+
 
 namespace DndCharacterSheet.Data
 {
@@ -42,11 +43,12 @@ namespace DndCharacterSheet.Data
         public int baseArmorClass { get; set; } = 10;
         public int currentArmorClass {get; set;} = 0;
         public int armorClassModifier { get; set; } = 0;
+        public List<Item> inventory { get; set; } = new List<Item>();
 
         public CharacterSheetModel(int level,int healthDie,int walkingSpeed = 30)
         {
             this.speed = walkingSpeed;
-
+            this.level = level;
             this.hitDie = healthDie;
             Random random = new Random();
             List<int> rolls = new List<int>();

@@ -1,0 +1,82 @@
+﻿
+@if (showModal)
+{
+    <div class="modal" style="display:block;">
+        <div class="modal-dialog" role="document">
+            <EditForm Model="@inventory" OnValidSubmit="@closeModal">
+                <DataAnnotationsValidator />
+                <div class="modal-content">
+                    <div class="modal-header">
+                        Header
+                    </div>
+                    <div class="modal-body">
+                        @if (inventory.Count > 0)
+                        {
+
+
+                            @foreach (var item in inventory)
+                            {
+                                <div class="pl-2">
+                                    <div class="row form-group">
+                                        <InputText @bind-Value="item.name" class="col-sm-6 form-control">Item Name</InputText>
+                                    </div>
+                                    <div class="row form-group">
+                                        <select @bind="item.modifies" class="form-control col-sm-4">
+                                            <option value="str">Strength</option>
+                                            <option value="dex">Dexterity</option>
+                                            <option value="con">Constitution</option>
+                                            <option value="int">Intelligence</option>
+                                            <option value="wis">Wisdom</option>
+                                            <option value="cha">Charisma</option>
+                                        </select>
+                                        <div class="col-sm-3"><InputNumber class="form-control" @bind-Value="item.modifier">Modifer</InputNumber></div>
+                                    </div>
+
+                                    <div class="row form-group">
+                                        <button type="button" class="btn btn-info">Save item</button>
+                                        <button class="btn btn-danger ml-2" @onclick="(() => deleteItem(item))">Delete Item</button>
+                                    </div>
+                                    <div>
+                                        <ValidationMessage For="@(() => item.name)" />
+                                        <ValidationMessage For="@(() => item.modifier)" />
+                                        <ValidationMessage For="@(() => item.modifies)" />
+                                    </div>
+                                    <hr />
+                                </div>
+                            }
+
+                        }
+                        <br />
+                    </div>
+                    <div class="modal-footer row">
+                        <button class="btn btn-info mr-auto ml-2" @onclick="addItemToInventory" type="button">Add Item</button>
+                        <button class="btn btn-info mr-2" type="submit">Save Inventory</button>
+                    </div>
+
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}
+<button @onclick="(()=>showModal = true)" class="btn btn-info">Edit Inventory</button>
+
+@code {
+    [Parameter] public List<Item> inventory { get; set; }
+    private bool showModal { get; set; } = false;
+    private void deleteItem(Item itemToDelete)
+    {
+        inventory.Remove(itemToDelete);
+    }
+
+    private void addItemToInventory()
+    {
+        var itemToAdd = new Item();
+        itemToAdd.Id = new Guid();
+        inventory.Add(itemToAdd);
+    }
+
+    private void closeModal()
+    {
+        showModal = false;
+    }
+}
