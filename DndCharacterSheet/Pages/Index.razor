@@ -1,74 +1,97 @@
 ﻿@page "/"
 @using DndCharacterSheet.Data
+@inject NavigationManager NavigationManager
 
+<h1 class="text-center">Dnd Character sheet for @character.Name |Level: @character.level</h1>
+<hr />
+<div class="row text-center">
+    <div class="col-sm-4"><b>Max hit Points:</b> @character.maxHitpoints</div>
+    <div class="col-sm-4"><b>Temp hit Points:</b> @character.tempHitPoints</div>
+    <div class="col-sm-4"><b>Current hit points:</b> @character.acutalHitPoints</div>
+</div>
+<br />
+<div class="text-center row">
+    <div class="col-lg-6">
 
-
-<div class="text-center">
-    <h1>Dnd Character sheet for @character.Name |Level: @character.level</h1>
-    <hr />
-    <div class="row text-center">
-        <div class="col-sm-4"><b>Max hit Points:</b> @character.maxHitpoints</div>
-        <div class="col-sm-4"><b>Temp hit Points:</b> @character.tempHitPoints</div>
-        <div class="col-sm-4"><b>Current hit points:</b> @character.acutalHitPoints</div>
+        <EditForm Model="@character">
+            <table class="table">
+                <tr>
+                    <th></th>
+                    <th style="padding-right:15px;">Stat</th>
+                    <th style="padding-right:15px;">Bonus</th>
+                    <th style="padding-right:5px;">Modifier</th>
+                    <th style="padding-right:100px;">Reset Value</th>
+                </tr>
+                <tr>
+                    <th>STRENGTH</th>
+                    <th>@character.currentStrength</th>
+                    <th>@((character.currentStrength - 10) / 2)</th>
+                    <th><InputNumber class="form-control" @onclick="changeStr" @bind-Value="@character.strengthMod" /></th>
+                    <th><button @onclick="(() => character.strengthMod = 0)" class="btn  btn-outline-info">Reset Stats</button></th>
+                </tr>
+                <tr>
+                    <th>DEXTERITY</th>
+                    <th>@character.currentDexterity</th>
+                    <th>@((character.currentDexterity - 10) / 2)</th>
+                    <th><InputNumber class="form-control" @onclick="changeDex" @bind-Value="@character.dexterityMod" /></th>
+                    <th><button @onclick="(()=>character.dexterityMod = 0)" class="btn  btn-outline-info">Reset Stats</button></th>
+                </tr>
+                <tr>
+                    <th>CONSTITUTION</th>
+                    <th>@character.currentConstitution</th>
+                    <th>@((character.currentConstitution - 10) / 2)</th>
+                    <th><InputNumber class="form-control" @onclick="changeCon" @bind-Value="@character.constitutionMod" /></th>
+                    <th><button @onclick="(()=>character.constitutionMod = 0)" class="btn  btn-outline-info">Reset Stats</button></th>
+                </tr>
+                <tr>
+                    <th>INTELLIGENCE</th>
+                    <th>@character.currentIntelligence</th>
+                    <th>@((character.currentIntelligence - 10) / 2)</th>
+                    <th><InputNumber class="form-control" @onclick="changeInt" @bind-Value="@character.intelligenceMod" /></th>
+                    <th><button @onclick="(()=>character.intelligenceMod = 0)" class="btn  btn-outline-info">Reset Stats</button></th>
+                </tr>
+                <tr>
+                    <th>WISDOM</th>
+                    <th>@character.currentWisdom</th>
+                    <th>@((character.currentWisdom - 10) / 2)</th>
+                    <th><InputNumber class="form-control" @onclick="changeWis" @bind-Value="@character.wisdomMod" /></th>
+                    <th><button @onclick="(()=>character.wisdomMod = 0)" class="btn  btn-outline-info">Reset Stats</button></th>
+                </tr>
+                <tr>
+                    <th>CHARISMA</th>
+                    <th>@character.currentCharisma</th>
+                    <th>@((character.currentCharisma - 10) / 2)</th>
+                    <th><InputNumber class="form-control" @onclick="changeCha" @bind-Value="@character.charismaMod" /></th>
+                    <th><button @onclick="(()=>character.charismaMod = 0)" class="btn  btn-outline-info">Reset Stats</button></th>
+                </tr>
+            </table>
+        </EditForm>
+        <button class="btn btn-info text-center" @onclick="generateNew">Generate New Character</button>
     </div>
-    <br />
-    <EditForm Model="@character">
+    <div class="col-lg-6">
         <table class="table">
             <tr>
-                <th></th>
-                <th style="padding-right:15px;">Stat</th>
-                <th style="padding-right:15px;">Bonus</th>
-                <th style="padding-right:5px;">Modifier</th>
-                <th style="padding-right:100px;">Reset Value</th>
+                <th class="col-sm-2">Item Name</th>
+                <th class="col-sm-2">Modifies</th>
+                <th class="col-sm-2">Modifier</th>
+                <th class="col-sm-6">Description</th>
             </tr>
-            <tr>
-                <th>STRENGTH</th>
-                <th>@character.currentStrength</th>
-                <th>@((character.currentStrength - 10) / 2)</th>
-                <th><InputNumber class="form-control" @onclick="changeStr" @bind-Value="@character.strengthMod" /></th>
-                <th><button @onclick="(() => character.strengthMod = 0)" class="btn  btn-outline-info">Reset Stats</button></th>
-            </tr>
-            <tr>
-                <th>DEXTERITY</th>
-                <th>@character.currentDexterity</th>
-                <th>@((character.currentDexterity - 10) / 2)</th>
-                <th><InputNumber class="form-control" @onclick="changeDex" @bind-Value="@character.dexterityMod" /></th>
-                <th><button @onclick="(()=>character.dexterityMod = 0)" class="btn  btn-outline-info">Reset Stats</button></th>
-            </tr>
-            <tr>
-                <th>CONSTITUTION</th>
-                <th>@character.currentConstitution</th>
-                <th>@((character.currentConstitution - 10) / 2)</th>
-                <th><InputNumber class="form-control" @onclick="changeCon" @bind-Value="@character.constitutionMod" /></th>
-                <th><button @onclick="(()=>character.constitutionMod = 0)" class="btn  btn-outline-info">Reset Stats</button></th>
-            </tr>
-            <tr>
-                <th>INTELLIGENCE</th>
-                <th>@character.currentIntelligence</th>
-                <th>@((character.currentIntelligence - 10) / 2)</th>
-                <th><InputNumber class="form-control" @onclick="changeInt" @bind-Value="@character.intelligenceMod" /></th>
-                <th><button @onclick="(()=>character.intelligenceMod = 0)" class="btn  btn-outline-info">Reset Stats</button></th>
-            </tr>
-            <tr>
-                <th>WISDOM</th>
-                <th>@character.currentWisdom</th>
-                <th>@((character.currentWisdom - 10) / 2)</th>
-                <th><InputNumber class="form-control" @onclick="changeWis" @bind-Value="@character.wisdomMod" /></th>
-                <th><button @onclick="(()=>character.wisdomMod = 0)" class="btn  btn-outline-info">Reset Stats</button></th>
-            </tr>
-            <tr>
-                <th>CHARISMA</th>
-                <th>@character.currentCharisma</th>
-                <th>@((character.currentCharisma - 10) / 2)</th>
-                <th><InputNumber class="form-control" @onclick="changeCha" @bind-Value="@character.charismaMod" /></th>
-                <th><button @onclick="(()=>character.charismaMod = 0)" class="btn  btn-outline-info">Reset Stats</button></th>
-            </tr>
+            @foreach (var item in character.inventory)
+            {
+                <tr>
+                    <td>@item.name</td>
+                    <td>@item.modifies</td>
+                    <td>@item.modifier</td>
+                    <td>@item.description</td>
+                </tr>
+            }
         </table>
-    </EditForm>
-    <button class="btn btn-info" @onclick="generateNew">Generate New Character</button>
+        <InventoryManagement @bind-inventory="@character.inventory"></InventoryManagement>
+    </div>
+
 </div>
+<button class="btn btn-outline-warning" @onclick="goToArena">Go to arena</button>
 <hr />
-<InventoryManagement inventory="@character.inventory"></InventoryManagement>
 <br />
 <br />
 <br />
@@ -79,6 +102,11 @@
     private bool isLoaded { get; set; } = false;
     private bool isValid { get; set; } = false;
     private bool hideModal { get; set; } = false;
+
+    private async void goToArena()
+    {
+        NavigationManager.NavigateTo("/Arena/" + character);
+    }
 
     protected override void OnInitialized()
     {
