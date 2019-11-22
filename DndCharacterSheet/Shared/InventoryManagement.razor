@@ -2,12 +2,15 @@
 @if (showModal)
 {
     <div class="modal" style="display:block;">
-        <div class="modal-dialog" role="document">
-            <EditForm Model="@inventory" OnValidSubmit="@closeModal">
+        <div class="modal-dialog">
+            <EditForm Model="@inventory" OnValidSubmit="closeModal">
                 <DataAnnotationsValidator />
                 <div class="modal-content">
                     <div class="modal-header">
-                        Header
+                        <div class="row">
+                            <h4 class="mr-auto ml-2">Inventory</h4>
+                        </div>
+                        <button class="btn btn-outline-secondary mr-2" type="submit" @onclick="closeModal">X</button>
                     </div>
                     <div class="modal-body">
                         @if (inventory.Count > 0)
@@ -16,10 +19,13 @@
                             {
                                 <div class="pl-2">
                                     <div class="row form-group">
+                                        <div class="col-sm-3">Item Name:</div>
                                         <InputText @bind-Value="item.name" class="col-sm-6 form-control">Item Name</InputText>
                                     </div>
                                     <div class="row form-group">
+                                        <div class="col-sm-3">Modifies:</div>
                                         <select @bind="item.modifies" class="form-control col-sm-4">
+                                            <option value=""></option>
                                             <option value="str">Strength</option>
                                             <option value="dex">Dexterity</option>
                                             <option value="con">Constitution</option>
@@ -27,22 +33,32 @@
                                             <option value="wis">Wisdom</option>
                                             <option value="cha">Charisma</option>
                                         </select>
-                                        <div class="col-sm-3"><InputNumber class="form-control" @bind-Value="item.modifier">Modifer</InputNumber></div>
+                                        <div class="col-sm-3">Modifier:</div>
+                                        <div class="col-sm-2"><InputNumber class="form-control" @bind-Value="item.modifier"></InputNumber></div>
                                     </div>
-
-                                    <div class="row form-group">
-                                        <button type="button" class="btn btn-info">Save item</button>
-                                        <button class="btn btn-danger ml-2" @onclick="(() => deleteItem(item))">Delete Item</button>
+                                    <div class="row">
+                                        <div class="col-sm-3">Description:</div>
+                                        <InputTextArea @bind-Value="item.description" class="col-sm-8 form-control"></InputTextArea>
+                                    </div>
+                                    <div class="row form-group mt-2 ">
+                                        <button type="button" class="btn btn-danger mr-2" @onclick="(() => deleteItem(item))">Delete Item</button>
                                     </div>
                                     <div>
                                         <ValidationMessage For="@(() => item.name)" />
                                         <ValidationMessage For="@(() => item.modifier)" />
                                         <ValidationMessage For="@(() => item.modifies)" />
+                                        <ValidationMessage For="@(() => item.description)" />
                                     </div>
                                     <hr />
                                 </div>
                             }
 
+                        }
+                        else
+                        {
+                            <div class="pl-2">
+                                No Items 
+                            </div>
                         }
                         <br />
                     </div>
@@ -60,7 +76,10 @@
 
 @code {
     [Parameter] public List<Item> inventory { get; set; }
+    [Parameter] public EventCallback<List<Item>> inventoryChanged { get; set; }
+
     private bool showModal { get; set; } = false;
+
     private void deleteItem(Item itemToDelete)
     {
         inventory.Remove(itemToDelete);
@@ -73,8 +92,10 @@
         inventory.Add(itemToAdd);
     }
 
-    private void closeModal()
+    private async Task closeModal()
     {
+        inventory.RemoveAll(x => x.name == null || x.name == "" || x.name == "default");
         showModal = false;
+        await inventoryChanged.InvokeAsync(inventory);
     }
 }

@@ -14,9 +14,16 @@ namespace DndCharacterSheet.Data
         public int modifier { get; set; }
         [Required] 
         public string modifies { get; set; }
-        [Required] 
-        public string name { get; set; }
+        [Required]
+        public string name { get; set; } 
         public string description { get; set; }
+
+        public Item()
+        {
+            name = "default";
+            modifier = 0;
+            modifies = "";
+        }
 
     }
 }
