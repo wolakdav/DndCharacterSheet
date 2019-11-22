@@ -130,6 +130,7 @@ namespace DndCharacterSheet.Data
                 hitPoints += this.baseConstitution + (random.Next(1, this.hitDie));
             }
             this.maxHitpoints = (baseConstitution + hitDie)+ hitPoints;
+            this.acutalHitPoints = this.maxHitpoints;
         }
 
         private void changeArmorClass(int changeAcBy)

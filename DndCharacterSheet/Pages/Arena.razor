@@ -1,9 +1,61 @@
-﻿@page "/Arena/{character:CharacterSheetModel}"
+﻿@page "/Arena"
+@inject AppState AppState
+@using System.Net.Http
 
-<h3>Arena</h3>
-
-
+<h1 class="text-center">Arena</h1>
+@if (dataLoaded)
+{
+<div class="row">
+    <div class="col-lg-6">
+        <div class="row">
+            <div class="col-sm-8">Fighter: @character.Name</div>
+            <div class="col-sm-4">Hitpoints: @character.acutalHitPoints/@character.maxHitpoints</div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-sm-2">STR: @character.currentStrength</div>
+            <div class="col-sm-2">DEX: @character.currentDexterity</div>
+            <div class="col-sm-2">INT: @character.currentIntelligence</div>
+            <div class="col-sm-2">WIS: @character.currentWisdom</div>
+            <div class="col-sm-2">CHA: @character.currentCharisma</div>
+            <div class="col-sm-2">CON: @character.currentConstitution</div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="row">
+            <div class="col-sm-8">Monster: @monster.Name</div>
+            <div class="col-sm-4">@monster.HitDice/@monsterMaxHitPointers</div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-sm-2">STR: @monster.Strength</div>
+            <div class="col-sm-2">DEX: @monster.Dexterity</div>
+            <div class="col-sm-2">INT: @monster.Intelligence</div>
+            <div class="col-sm-2">WIS: @monster.Wisdom</div>
+            <div class="col-sm-2">CHA: @monster.Charisma</div>
+            <div class="col-sm-2">CON: @monster.Constitution</div>
+        </div>
+    </div>
+    
+    
+</div>
+}
 
 @code {
-    [Parameter] public CharacterSheetModel character { get; set; }
+    public CharacterSheetModel character { get; set; }
+    public bool dataLoaded { get; set; } = false;
+    private static readonly HttpClient client = new HttpClient();
+    private Monster monster { get; set; }
+    private long monsterMaxHitPointers { get; set; } = 0;
+    protected override async void OnInitialized()
+    {
+        character = AppState.character;
+
+        var foo = await client.GetStringAsync("http://dnd5eapi.co/api/monsters/3/");
+        monster = Monster.FromJson(foo);
+        monsterMaxHitPointers = monster.HitPoints;
+
+        dataLoaded = true;
+        this.StateHasChanged();
+    }
 }
