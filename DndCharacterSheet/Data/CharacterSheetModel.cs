@@ -10,8 +10,7 @@ namespace DndCharacterSheet.Data
     public class CharacterSheetModel
     {
         [Required]
-        [StringLength(10, ErrorMessage = "Name is too long.")]
-        public string Name { get; set; }
+        public string Name { get; set; } = "Default Name";
         public int level { get; set; }
         public int baseStrength { get; set; }
         public int currentStrength { get; set; }

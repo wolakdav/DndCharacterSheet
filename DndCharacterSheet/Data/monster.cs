@@ -6,7 +6,7 @@ using Newtonsoft.Json.Converters;
 
 namespace DndCharacterSheet.Data
 {
-    public partial class Monster
+    public class Monster
     {
             [JsonProperty("_id")]
             public string Id { get; set; }
@@ -118,9 +118,19 @@ namespace DndCharacterSheet.Data
 
             [JsonProperty("url")]
             public Uri Url { get; set; }
-        }
 
-        public partial class Action
+        public static Monster FromJson(string json)
+        {
+            //return JsonConvert.DeserializeObject<Monster>(json, Services.JsonConverter.Settings);
+            return Services.JsonConverter.FromJson<Monster>(json);
+        }
+        public string ToJson()
+        {
+            return JsonConvert.SerializeObject(this, Services.JsonConverter.Settings);
+        }
+    }
+
+        public class Action
         {
             [JsonProperty("attack_bonus")]
             public long AttackBonus { get; set; }
@@ -138,7 +148,7 @@ namespace DndCharacterSheet.Data
             public string DamageDice { get; set; }
         }
 
-        public partial class LegendaryAction
+        public class LegendaryAction
         {
             [JsonProperty("attack_bonus")]
             public long AttackBonus { get; set; }
@@ -150,27 +160,9 @@ namespace DndCharacterSheet.Data
             public string Name { get; set; }
         }
 
-        public partial class Monster
-        {
-            public static Monster FromJson(string json) => JsonConvert.DeserializeObject<Monster>(json, DndCharacterSheet.Data.Converter.Settings);
-        }
-
-        public static class Serialize
-        {
-            public static string ToJson(this Monster self) => JsonConvert.SerializeObject(self, DndCharacterSheet.Data.Converter.Settings);
-        }
-
         internal static class Converter
         {
-            public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
-            {
-                MetadataPropertyHandling = MetadataPropertyHandling.Ignore,
-                DateParseHandling = DateParseHandling.None,
-                Converters =
-            {
-                new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }
-            },
-            };
+
         }
     }
 

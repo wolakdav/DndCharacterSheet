@@ -1,61 +1,182 @@
 ﻿@page "/Arena"
 @inject AppState AppState
 @using System.Net.Http
-
+@using BlazorStrap
 <h1 class="text-center">Arena</h1>
-@if (dataLoaded)
+@if (dataLoaded && monsterSelected)
 {
-<div class="row">
-    <div class="col-lg-6">
-        <div class="row">
-            <div class="col-sm-8">Fighter: @character.Name</div>
-            <div class="col-sm-4">Hitpoints: @character.acutalHitPoints/@character.maxHitpoints</div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="row">
+                <div class="col-sm-8">Fighter: @character.Name</div>
+                <div class="col-sm-4">Hitpoints: @character.acutalHitPoints/@character.maxHitpoints</div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-sm-2">STR: @character.currentStrength</div>
+                <div class="col-sm-2">DEX: @character.currentDexterity</div>
+                <div class="col-sm-2">INT: @character.currentIntelligence</div>
+                <div class="col-sm-2">WIS: @character.currentWisdom</div>
+                <div class="col-sm-2">CHA: @character.currentCharisma</div>
+                <div class="col-sm-2">CON: @character.currentConstitution</div>
+            </div>
         </div>
-        <hr />
-        <div class="row">
-            <div class="col-sm-2">STR: @character.currentStrength</div>
-            <div class="col-sm-2">DEX: @character.currentDexterity</div>
-            <div class="col-sm-2">INT: @character.currentIntelligence</div>
-            <div class="col-sm-2">WIS: @character.currentWisdom</div>
-            <div class="col-sm-2">CHA: @character.currentCharisma</div>
-            <div class="col-sm-2">CON: @character.currentConstitution</div>
+        <div class="col-lg-6">
+            <div class="row">
+                <div class="col-sm-8">Monster: @selectedMonster.Name</div>
+                <div class="col-sm-4">Hitpointers: @selectedMonster.HitPoints/@monsterMaxHitPointers</div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-sm-2">STR: @selectedMonster.Strength</div>
+                <div class="col-sm-2">DEX: @selectedMonster.Dexterity</div>
+                <div class="col-sm-2">INT: @selectedMonster.Intelligence</div>
+                <div class="col-sm-2">WIS: @selectedMonster.Wisdom</div>
+                <div class="col-sm-2">CHA: @selectedMonster.Charisma</div>
+                <div class="col-sm-2">CON: @selectedMonster.Constitution</div>
+            </div>
         </div>
+
+
     </div>
-    <div class="col-lg-6">
-        <div class="row">
-            <div class="col-sm-8">Monster: @monster.Name</div>
-            <div class="col-sm-4">@monster.HitDice/@monsterMaxHitPointers</div>
-        </div>
-        <hr />
-        <div class="row">
-            <div class="col-sm-2">STR: @monster.Strength</div>
-            <div class="col-sm-2">DEX: @monster.Dexterity</div>
-            <div class="col-sm-2">INT: @monster.Intelligence</div>
-            <div class="col-sm-2">WIS: @monster.Wisdom</div>
-            <div class="col-sm-2">CHA: @monster.Charisma</div>
-            <div class="col-sm-2">CON: @monster.Constitution</div>
-        </div>
-    </div>
-    
-    
-</div>
 }
+else if (dataLoaded && !monsterSelected)
+{
+<div class="row justify-content-lg-center">
+        <select @onchange="changeMonster" class="custom-select-lg form-control-lg col-lg-4">
+            <option value="">Select a monster</option>
+            @foreach (var monster in allMonsters.results)
+            {
+                <option value="@monster.url">@monster.name</option>
+            }
+        </select>
+        <button disabled="@(!hasSelectedMonster)" class="btn btn-info col-lg-3 ml-2" @onclick="loadMonster">Select Monster</button>
+    </div>
+    <br />
+    @if (hasSelectedMonster)
+    {
+<div class="row justify-content-lg-center">
+    <div class="accordion col-lg-6">
+        <BSCard CardType="CardType.Card">
+            <BSCard CardType="CardType.Header"><BSButton ButtonType="ButtonType.Button" OnClick="@accordianClick1" Color="Color.None" Class="btn-link">Monster Stats</BSButton></BSCard>
+            <BSCollapse IsOpen="@IsOpen1">
+                <BSCard CardType="CardType.Text">
+                    <div class="card-body">
+                        <div>Name: @selectedMonster.Name</div>
+                        <div>CR: @selectedMonster.ChallengeRating</div>
+                        <div>Attacks: </div>
+                    </div>
+                </BSCard>
+            </BSCollapse>
+        </BSCard>
+        <BSCard CardType="CardType.Card">
+            <BSCard CardType="CardType.Header"><BSButton ButtonType="ButtonType.Button" OnClick="@accordianClick2" Color="Color.None" Class="btn-link">Monster Attacks</BSButton></BSCard>
+            <BSCollapse IsOpen="@IsOpen2">
+                <BSCard CardType="CardType.Text">
+                    <div class="card-body">
+                        @foreach (var action in selectedMonster.Actions)
+                        {
+                            <div>Name: @action.Name</div>
+                            <div>Damage: @action.DamageDice @(action.DamageBonus == null ? "0" : "+" + @action.DamageBonus.ToString())</div>
+                            <div>Attack Bonus: @action.AttackBonus</div>
+                            <div>Description: @action.Desc</div>
+                            <hr />
+                        }
+                    </div>
+                </BSCard>
+            </BSCollapse>
+        </BSCard>
+        <BSCard CardType="CardType.Card">
+            <BSCard CardType="CardType.Header"><BSButton IsDisabled="@(selectedMonster.LegendaryActions == null)" ButtonType="ButtonType.Button" OnClick="@accordianClick3" Color="Color.None" Class="btn-link">Legendary actions</BSButton></BSCard>
+            <BSCollapse IsOpen="@IsOpen3">
+                <BSCard CardType="CardType.Text">
+                    @if (selectedMonster.LegendaryActions != null)
+                    {
+                        <div class="card-body">
+                            @foreach (var action in selectedMonster.LegendaryActions)
+                            {
+                                <div>Name: @action.Name</div>
+                                <div>Attack Bonus: @action.AttackBonus</div>
+                                <div>Description: @action.Desc</div>
+                                <hr />
+                            }
+                        </div>
+                    }
+                </BSCard>
+            </BSCollapse>
+        </BSCard>
+    </div>
+</div>
+    }
+}
+
+
+
 
 @code {
     public CharacterSheetModel character { get; set; }
     public bool dataLoaded { get; set; } = false;
-    private static readonly HttpClient client = new HttpClient();
-    private Monster monster { get; set; }
+    private Monster selectedMonster { get; set; }
     private long monsterMaxHitPointers { get; set; } = 0;
+    private bool monsterSelected { get; set; } = false;
+    private ListOfAll allMonsters { get; set; }
+    public string selectedMonsterURL { get; set; }
+    private bool hasSelectedMonster { get; set; }
+    private bool showActions { get; set; } = false;
+
+    bool IsOpen1 { get; set; } = true;
+    bool IsOpen2 { get; set; }
+    bool IsOpen3 { get; set; }
+    void accordianClick1(MouseEventArgs e)
+    {
+        IsOpen1 = true;
+        IsOpen2 = false;
+        IsOpen3 = false;
+        StateHasChanged();
+    }
+    void accordianClick2(MouseEventArgs e)
+    {
+        IsOpen1 = false;
+        IsOpen2 = true;
+        IsOpen3 = false;
+        StateHasChanged();
+    }
+    void accordianClick3(MouseEventArgs e)
+    {
+        IsOpen1 = false;
+        IsOpen2 = false;
+        IsOpen3 = true;
+        StateHasChanged();
+    }
+
     protected override async void OnInitialized()
     {
         character = AppState.character;
-
-        var foo = await client.GetStringAsync("http://dnd5eapi.co/api/monsters/3/");
-        monster = Monster.FromJson(foo);
-        monsterMaxHitPointers = monster.HitPoints;
-
+        allMonsters = await Services.getMonsters.GetAllMonsters();
         dataLoaded = true;
+        this.StateHasChanged();
+    }
+
+    public async void changeMonster(ChangeEventArgs selected)
+    {
+        selectedMonsterURL = selected.Value.ToString();
+        if (selectedMonsterURL != "" && selectedMonsterURL != null && selectedMonsterURL != "Select a monster")
+        {
+            selectedMonster = await Services.getMonsters.GetMonsterFromURL(selectedMonsterURL);
+            hasSelectedMonster = true;
+        }
+        else
+        {
+            hasSelectedMonster = false;
+        }
+        this.StateHasChanged();
+    }
+
+    public async void loadMonster()
+    {
+        selectedMonster = await Services.getMonsters.GetMonsterFromURL(selectedMonsterURL);
+        monsterMaxHitPointers = selectedMonster.HitPoints;
+        monsterSelected = true;
         this.StateHasChanged();
     }
 }

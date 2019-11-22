@@ -2,6 +2,7 @@
 @using DndCharacterSheet.Data
 @inject NavigationManager NavigationManager
 @inject AppState AppState
+
     <EditForm Model="@character" OnValidSubmit="@goToArena">
         <DataAnnotationsValidator />
         <div class="text-center modal-content">
@@ -37,46 +38,46 @@
                         <th>@character.currentStrength</th>
                         <th>@((character.currentStrength - 10) / 2)</th>
                         <th><InputNumber class="form-control" @onclick="changeStr" @bind-Value="@character.strengthMod" /></th>
-                        <th><button @onclick="(() => character.strengthMod = 0)" class="btn  btn-outline-info">Reset Stats</button></th>
+                        <th><button @onclick="(() => character.strengthMod = 0)" class="btn  btn-outline-info" type="button">Reset Stats</button></th>
                     </tr>
                     <tr>
                         <th>DEXTERITY</th>
                         <th>@character.currentDexterity</th>
                         <th>@((character.currentDexterity - 10) / 2)</th>
                         <th><InputNumber class="form-control" @onclick="changeDex" @bind-Value="@character.dexterityMod" /></th>
-                        <th><button @onclick="(()=>character.dexterityMod = 0)" class="btn  btn-outline-info">Reset Stats</button></th>
+                        <th><button @onclick="(()=>character.dexterityMod = 0)" class="btn  btn-outline-info" type="button">Reset Stats</button></th>
                     </tr>
                     <tr>
                         <th>CONSTITUTION</th>
                         <th>@character.currentConstitution</th>
                         <th>@((character.currentConstitution - 10) / 2)</th>
                         <th><InputNumber class="form-control" @onclick="changeCon" @bind-Value="@character.constitutionMod" /></th>
-                        <th><button @onclick="(()=>character.constitutionMod = 0)" class="btn  btn-outline-info">Reset Stats</button></th>
+                        <th><button @onclick="(()=>character.constitutionMod = 0)" class="btn  btn-outline-info" type="button">Reset Stats</button></th>
                     </tr>
                     <tr>
                         <th>INTELLIGENCE</th>
                         <th>@character.currentIntelligence</th>
                         <th>@((character.currentIntelligence - 10) / 2)</th>
                         <th><InputNumber class="form-control" @onclick="changeInt" @bind-Value="@character.intelligenceMod" /></th>
-                        <th><button @onclick="(()=>character.intelligenceMod = 0)" class="btn  btn-outline-info">Reset Stats</button></th>
+                        <th><button @onclick="(()=>character.intelligenceMod = 0)" class="btn  btn-outline-info" type="button">Reset Stats</button></th>
                     </tr>
                     <tr>
                         <th>WISDOM</th>
                         <th>@character.currentWisdom</th>
                         <th>@((character.currentWisdom - 10) / 2)</th>
                         <th><InputNumber class="form-control" @onclick="changeWis" @bind-Value="@character.wisdomMod" /></th>
-                        <th><button @onclick="(()=>character.wisdomMod = 0)" class="btn  btn-outline-info">Reset Stats</button></th>
+                        <th><button @onclick="(()=>character.wisdomMod = 0)" class="btn  btn-outline-info" type="button">Reset Stats</button></th>
                     </tr>
                     <tr>
                         <th>CHARISMA</th>
                         <th>@character.currentCharisma</th>
                         <th>@((character.currentCharisma - 10) / 2)</th>
                         <th><InputNumber class="form-control" @onclick="changeCha" @bind-Value="@character.charismaMod" /></th>
-                        <th><button @onclick="(()=>character.charismaMod = 0)" class="btn  btn-outline-info">Reset Stats</button></th>
+                        <th><button @onclick="(()=>character.charismaMod = 0)" class="btn  btn-outline-info" type="button">Reset Stats</button></th>
                     </tr>
                 </table>
 
-                <button class="btn btn-info text-center" @onclick="generateNew">Generate New Character</button>
+                <button class="btn btn-info text-center" @onclick="generateNew" type="button" >Generate New Character</button>
             </div>
 
             <div class="col-lg-6">
