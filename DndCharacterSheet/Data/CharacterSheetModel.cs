@@ -130,6 +130,18 @@ namespace DndCharacterSheet.Data
             }
             this.maxHitpoints = (baseConstitution + hitDie)+ hitPoints;
             this.acutalHitPoints = this.maxHitpoints;
+
+            Item defaultWeapon = new Item();
+            defaultWeapon.name = "Fists";
+            defaultWeapon.description = "Angry? Try punching it, that might help";
+            defaultWeapon.attackDie = 0;
+            defaultWeapon.amtAttackDie = 0;
+            defaultWeapon.attackBonus = 0;
+            defaultWeapon.damageBonus = 1 + ((this.currentStrength - 10) / 2);
+            defaultWeapon.damageDie = 0;
+            defaultWeapon.amtDamageDie = 0;
+            defaultWeapon.isWeapon = true;
+            this.inventory.Add(defaultWeapon);
         }
 
         private void changeArmorClass(int changeAcBy)

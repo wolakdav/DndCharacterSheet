@@ -11,18 +11,31 @@ namespace DndCharacterSheet.Data
         [Required]
         public Guid Id { get; set; }
         [Required] 
-        public int modifier { get; set; }
+        public int attackBonus { get; set; }
         [Required] 
-        public string modifies { get; set; }
+        public int attackDie { get; set; }
         [Required]
-        public string name { get; set; } 
+        public int amtAttackDie { get; set; }
+        [Required]
+        public string name { get; set; }
+        [Required]
+        public int damageDie { get; set; }
+        [Required]
+        public int amtDamageDie { get; set; }
+        public int damageBonus { get; set; }
         public string description { get; set; }
+        public bool isWeapon { get; set; }
 
         public Item()
         {
-            name = "default";
-            modifier = 0;
-            modifies = "";
+            name = "Weapon";
+            attackBonus = 0;
+            attackDie = 0;
+            amtAttackDie = 1;
+            damageDie = 0;
+            amtDamageDie = 1;
+            damageBonus = 0;
+
         }
 
     }

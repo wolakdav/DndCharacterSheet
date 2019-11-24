@@ -2,7 +2,7 @@
 @if (showModal)
 {
     <div class="modal" style="display:block;">
-        <div class="modal-dialog">
+        <div class="modal-dialog  modal-lg">
             <EditForm Model="@inventory" OnValidSubmit="closeModal">
                 <DataAnnotationsValidator />
                 <div class="modal-content">
@@ -17,40 +17,63 @@
                         {
                             @foreach (var item in inventory)
                             {
-                                <div class="pl-2">
-                                    <div class="row form-group">
-                                        <div class="col-sm-3">Item Name:</div>
-                                        <InputText @bind-Value="item.name" class="col-sm-6 form-control">Item Name</InputText>
-                                    </div>
-                                    <div class="row form-group">
-                                        <div class="col-sm-3">Modifies:</div>
-                                        <select @bind="item.modifies" class="form-control col-sm-4">
-                                            <option value=""></option>
-                                            <option value="str">Strength</option>
-                                            <option value="dex">Dexterity</option>
-                                            <option value="con">Constitution</option>
-                                            <option value="int">Intelligence</option>
-                                            <option value="wis">Wisdom</option>
-                                            <option value="cha">Charisma</option>
-                                        </select>
-                                        <div class="col-sm-3">Modifier:</div>
-                                        <div class="col-sm-2"><InputNumber class="form-control" @bind-Value="item.modifier"></InputNumber></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-3">Description:</div>
-                                        <InputTextArea @bind-Value="item.description" class="col-sm-8 form-control"></InputTextArea>
-                                    </div>
-                                    <div class="row form-group mt-2 ">
-                                        <button type="button" class="btn btn-danger mr-2" @onclick="(() => deleteItem(item))">Delete Item</button>
-                                    </div>
-                                    <div>
-                                        <ValidationMessage For="@(() => item.name)" />
-                                        <ValidationMessage For="@(() => item.modifier)" />
-                                        <ValidationMessage For="@(() => item.modifies)" />
-                                        <ValidationMessage For="@(() => item.description)" />
-                                    </div>
-                                    <hr />
-                                </div>
+                        <div class="pl-2">
+
+                            <div class="row form-group">
+                                <div class="col-sm-2">Item Name:</div>
+                                <InputText @bind-Value="item.name" class="col-sm-4 form-control">Item Name</InputText>
+                                <div class="col-sm-2"> Is weapon:</div>
+                                <InputCheckbox @bind-Value="item.isWeapon" class="col-sm-1 form-check-label"></InputCheckbox>
+
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-sm-2">Attack Die:</div>
+                                <select @bind="item.attackDie" class="form-control col-sm-1">
+                                    <option value=4>d4</option>
+                                    <option value=6>d6</option>
+                                    <option value=10>d10</option>
+                                    <option value=12>d12</option>
+                                    <option value=20>d20</option>
+                                </select>
+                                <div class="col-sm-1">x</div>
+                                <div class="col-sm-2"><InputNumber class="form-control" @bind-Value="item.amtAttackDie"></InputNumber></div>
+                                <div class="col-sm-3">Attack Bonus:</div>
+                                <div class="col-sm-2"><InputNumber class="form-control" @bind-Value="item.attackBonus"></InputNumber></div>
+
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-sm-2">Damage Die:</div>
+                                <select @bind="item.damageDie" class="form-control col-sm-1">
+                                    <option value=4>d4</option>
+                                    <option value=6>d6</option>
+                                    <option value=10>d10</option>
+                                    <option value=12>d12</option>
+                                    <option value=20>d20</option>
+                                </select>
+                                <div class="col-sm-1">x</div>
+                                <div class="col-sm-2"><InputNumber class="form-control" @bind-Value="item.amtDamageDie"></InputNumber></div>
+                                <div class="col-sm-3">Damage Bonus:</div>
+                                <div class="col-sm-2"><InputNumber class="form-control" @bind-Value="item.damageBonus"></InputNumber></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">Description:</div>
+                                <InputTextArea @bind-Value="item.description" class="col-sm-8 form-control"></InputTextArea>
+                            </div>
+                            <div>
+                                <ValidationMessage For="@(() => item.name)" />
+                                <ValidationMessage For="@(() => item.attackBonus)" />
+                                <ValidationMessage For="@(() => item.attackDie)" />
+                                <ValidationMessage For="@(() => item.amtAttackDie)" />
+                                <ValidationMessage For="@(() => item.description)" />
+                                <ValidationMessage For="@(() => item.damageDie)" />
+                                <ValidationMessage For="@(() => item.damageBonus)" />
+                                <ValidationMessage For="@(() => item.amtDamageDie)" />
+                            </div>
+                            <div class="row form-group mt-2 ">
+                                <button type="button" class="btn btn-danger mr-2" @onclick="(() => deleteItem(item))">Delete Item</button>
+                            </div>
+                            <hr />
+                        </div>
                             }
 
                         }

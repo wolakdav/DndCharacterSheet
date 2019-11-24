@@ -1,0 +1,36 @@
+﻿@inject NavigationManager NavigationManager
+@inject AppState AppState
+@if (showModal)
+{
+    <div class="modal" style="display:block;">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="btn btn-outline-secondary mr-2" type="submit" onclick="closeModal">X</button>
+                </div>
+                <div class="modal-body">
+                    You killed the monster! Congrats
+                </div>
+                <div class="modal-footer row">
+                    <button class="btn btn-info mr-2" type="submit" onclick="goHome">New Character</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+<button class="btn btn-info" type="button">Edit Inventory</button>
+}
+
+@code {
+    private bool showModal { get; set; } = true;
+    private async void goHome()
+    {
+        NavigationManager.NavigateTo("/index");
+        this.StateHasChanged();
+    }
+    private void closeModal()
+    {
+        showModal = false;
+    }
+
+}

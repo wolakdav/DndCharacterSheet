@@ -20,7 +20,25 @@
                 <div class="col-sm-2">CHA: @character.currentCharisma</div>
                 <div class="col-sm-2">CON: @character.currentConstitution</div>
             </div>
+            <br />
+            <br />
+            @if (combatActive)
+            {
+                @foreach (var weapon in character.inventory.Where(x => x.isWeapon))
+                {
+                    <div class="row border">
+                        <div class="col-sm-3">@weapon.name</div>
+                        <div class="col-sm-3">Attack Bonus: @weapon.attackBonus</div>
+                        <div class="col-sm-3">Attack Die: @weapon.attackDie</div>
+                        <button class="btn btn-danger col-sm-3" @onclick="(()=>attack(weapon))">Attack</button>
+                    </div>
+                }
+            }
+
         </div>
+
+
+
         <div class="col-lg-6">
             <div class="row">
                 <div class="col-sm-8">Monster: @selectedMonster.Name</div>
@@ -123,6 +141,8 @@ else if (dataLoaded && !monsterSelected)
     public string selectedMonsterURL { get; set; }
     private bool hasSelectedMonster { get; set; }
     private bool showActions { get; set; } = false;
+    private bool playerHit { get; set; } = false;
+    private bool combatActive { get; set; } = false;
 
     bool IsOpen1 { get; set; } = true;
     bool IsOpen2 { get; set; }
@@ -177,6 +197,19 @@ else if (dataLoaded && !monsterSelected)
         selectedMonster = await Services.getMonsters.GetMonsterFromURL(selectedMonsterURL);
         monsterMaxHitPointers = selectedMonster.HitPoints;
         monsterSelected = true;
+        combatActive = true;
         this.StateHasChanged();
+    }
+
+    private void attack(Item weapon)
+    {
+        var attackBonus = dice.rollDice(weapon.attackDie, weapon.amtAttackDie) + weapon.attackBonus;
+        var attackRoll = dice.d20() + attackBonus;
+        if(attackRoll >= selectedMonster.ArmorClass)
+        {
+            playerHit = true;
+            var damage = weapon.damageBonus + dice.rollDice(weapon.damageDie, weapon.amtDamageDie);
+            selectedMonster.HitPoints -= damage;
+        }
     }
 }
